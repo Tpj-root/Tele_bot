@@ -52,6 +52,7 @@ Check:
 
 ```
 ls /opt/boost_1_83_0/lib/libboost_thread*
+
 ls /opt/boost_1_83_0/lib/cmake/boost_thread-1.83.0/
 
 ```
@@ -67,6 +68,7 @@ ls /opt/boost_1_83_0/lib/cmake/boost_thread-1.83.0/
 git clone "https://github.com/reo7sp/tgbot-cpp.git"
 
 cd tgbot-cpp
+
 mkdir build && cd build
 
 
@@ -119,6 +121,8 @@ Then, how to find the location of .a static library files in Linux?
 
 ```
 cnc@debian:~/Desktop/BOT_BASIC/tgbot-cpp/build$ ls
+
+
 CMakeCache.txt  CMakeFiles  cmake_install.cmake  libTgBot.a  Makefile
 
 ```
@@ -129,7 +133,9 @@ alias m='mkdir build && cd build && cmake .. && make'
 git clone "https://github.com/Tpj-root/Tele_bot.git"
 
 cd Tele_bot/samples/
+
 m
+
 ./echobot 
 
 
@@ -150,6 +156,7 @@ cnc@debian:~/Desktop/MY_GIT/Tele_bot/samples/echobot/build$
 
 ```
 export TOKEN="8247236172:AAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+
 ./echobot
 
 ```

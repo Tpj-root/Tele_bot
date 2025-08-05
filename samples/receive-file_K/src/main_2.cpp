@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <exception>
 #include <string>
+#include <fstream>
 
 #include <tgbot/tgbot.h>
 
@@ -13,18 +14,35 @@ int main() {
     string token(getenv("TOKEN"));
     printf("Token: %s\n", token.c_str());
 
-    CurlHttpClient curlHttpClient;
-
-    Bot bot(token, curlHttpClient);
+    Bot bot(token);
     bot.getEvents().onCommand("start", [&bot](Message::Ptr message) {
         bot.getApi().sendMessage(message->chat->id, "Hi!");
     });
+
     bot.getEvents().onAnyMessage([&bot](Message::Ptr message) {
-        printf("User wrote %s\n", message->text.c_str());
+        printf("User wrote: %s\n", message->text.c_str());
+
         if (StringTools::startsWith(message->text, "/start")) {
             return;
         }
-        bot.getApi().sendMessage(message->chat->id, "Your message is: " + message->text);
+
+        if (message->document) {
+            try {
+                File::Ptr file = bot.getApi().getFile(message->document->fileId);
+                string fileContent = bot.getApi().downloadFile(file->filePath);
+
+                // Save to local file
+                string localFileName = "downloaded_" + message->document->fileName;
+                ofstream out(localFileName, ios::binary);
+                out << fileContent;
+                out.close();
+
+                bot.getApi().sendMessage(message->chat->id, "✅ File saved as: " + localFileName);
+            } catch (exception& e) {
+                bot.getApi().sendMessage(message->chat->id, "❌ Error downloading/saving file");
+                printf("Download error: %s\n", e.what());
+            }
+        }
     });
 
     signal(SIGINT, [](int s) {

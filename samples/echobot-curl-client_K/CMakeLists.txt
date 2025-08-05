@@ -29,9 +29,12 @@ include_directories(
 # Define executable
 add_executable(echobot src/main.cpp)
 
+add_definitions(-DHAVE_CURL)
+
+
 
 target_link_libraries(echobot
-    /home/cnc/Desktop/BOT_BASIC/tgbot-cpp/build/libTgBot.a
+    /home/cnc/Desktop/MY_GIT/Tele_bot/lib/libTgBot.a
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}
     ${CURL_LIBRARIES}

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(reply_keyboard)
+project(echobot)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -30,7 +30,7 @@ include_directories(
 add_executable(echobot src/main.cpp)
 
 
-target_link_libraries(reply_keyboard
+target_link_libraries(echobot
     /home/cnc/Desktop/MY_GIT/Tele_bot/lib/libTgBot.a
     ${CMAKE_THREAD_LIBS_INIT}
     ${Boost_LIBRARIES}

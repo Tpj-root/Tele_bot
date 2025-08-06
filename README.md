@@ -3,6 +3,45 @@
 
 
 
+### 🔴 Bots **cannot send messages** to other bots
+
+Telegram **blocks bot-to-bot communication**.
+
+### ✅ Bot can only:
+
+* Reply to **users**
+* Post in **groups/supergroups** where it's added
+* Send messages if **user/group has interacted with it first**
+
+### Summary:
+
+| What         | Possible?                    |
+| ------------ | ---------------------------- |
+| Bot to User  | ✅ Yes (if user started chat) |
+| Bot to Group | ✅ Yes (if added)             |
+| Bot to Bot   | ❌ No                         |
+
+
+
+
+If you need two bots to "talk", you must use a **server/middleware** between them.
+
+
+```
+https://my.telegram.org/apps
+
+```
+
+
+<p float="left">
+  <img src="API.png" width="200"/>
+</p>
+
+
+
+
+
+
 ### Download_site
 
 https://www.boost.org/releases/1.83.0/
@@ -168,7 +207,6 @@ export TOKEN="8247236172:AAAAAAAAAAAAAAAAAAAAAAAAAAAA"
   <img src="lib_link.png" width="200"/>
   <img src="run_time_test.png" width="200"/>
 </p>
-
 
 
 

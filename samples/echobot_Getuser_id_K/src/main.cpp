@@ -15,42 +15,27 @@ int main() {
 
     Bot bot(token);
 
-
-    vector<BotCommand::Ptr> commands;
-    BotCommand::Ptr cmdArray(new BotCommand);
-    cmdArray->command = "start";
-    cmdArray->description = "iam start";
-
-    commands.push_back(cmdArray);
-
-    cmdArray = BotCommand::Ptr(new BotCommand);
-    cmdArray->command = "login";
-    cmdArray->description = "lgoin in account";
-    commands.push_back(cmdArray);
-
-    cmdArray = BotCommand::Ptr(new BotCommand);
-    cmdArray->command = "logout";
-    cmdArray->description = "close";
-    commands.push_back(cmdArray);
-
-    bot.getApi().setMyCommands(commands);
-
-    vector<BotCommand::Ptr> vectCmd;
-    vectCmd = bot.getApi().getMyCommands();
-
-    for(std::vector<BotCommand::Ptr>::iterator it = vectCmd.begin(); it != vectCmd.end(); ++it) {
-        printf("cmd: %s -> %s\r",(*it)->command.c_str(),(*it)->description.c_str());
-    }
-
     bot.getEvents().onCommand("start", [&bot](Message::Ptr message) {
         bot.getApi().sendMessage(message->chat->id, "Hi!");
     });
+
     bot.getEvents().onAnyMessage([&bot](Message::Ptr message) {
-        printf("User wrote %s\n", message->text.c_str());
+        int64_t userId = message->from->id;
+        string userName = message->from->username;
+
+        printf("User ID: %ld\n", userId);
+        printf("Username: %s\n", userName.c_str());
+        printf("User wrote: %s\n", message->text.c_str());
+
         if (StringTools::startsWith(message->text, "/start")) {
             return;
         }
-        bot.getApi().sendMessage(message->chat->id, "Your message is: " + message->text);
+
+        string reply = "Your ID: " + to_string(userId) +
+                       "\nUsername: @" + userName +
+                       "\nMessage: " + message->text;
+
+        bot.getApi().sendMessage(message->chat->id, reply);
     });
 
     signal(SIGINT, [](int s) {

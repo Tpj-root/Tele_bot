@@ -9,48 +9,46 @@
 using namespace std;
 using namespace TgBot;
 
+string chatTypeToString(Chat::Type type) {
+    switch (type) {
+        case Chat::Type::Private: return "private";
+        case Chat::Type::Group: return "group";
+        case Chat::Type::Supergroup: return "supergroup";
+        case Chat::Type::Channel: return "channel";
+        default: return "unknown";
+    }
+}
+
 int main() {
     string token(getenv("TOKEN"));
     printf("Token: %s\n", token.c_str());
 
     Bot bot(token);
 
-
-    vector<BotCommand::Ptr> commands;
-    BotCommand::Ptr cmdArray(new BotCommand);
-    cmdArray->command = "start";
-    cmdArray->description = "iam start";
-
-    commands.push_back(cmdArray);
-
-    cmdArray = BotCommand::Ptr(new BotCommand);
-    cmdArray->command = "login";
-    cmdArray->description = "lgoin in account";
-    commands.push_back(cmdArray);
-
-    cmdArray = BotCommand::Ptr(new BotCommand);
-    cmdArray->command = "logout";
-    cmdArray->description = "close";
-    commands.push_back(cmdArray);
-
-    bot.getApi().setMyCommands(commands);
-
-    vector<BotCommand::Ptr> vectCmd;
-    vectCmd = bot.getApi().getMyCommands();
-
-    for(std::vector<BotCommand::Ptr>::iterator it = vectCmd.begin(); it != vectCmd.end(); ++it) {
-        printf("cmd: %s -> %s\r",(*it)->command.c_str(),(*it)->description.c_str());
-    }
-
     bot.getEvents().onCommand("start", [&bot](Message::Ptr message) {
         bot.getApi().sendMessage(message->chat->id, "Hi!");
     });
+
     bot.getEvents().onAnyMessage([&bot](Message::Ptr message) {
-        printf("User wrote %s\n", message->text.c_str());
+        int64_t chatId = message->chat->id;
+        string chatType = chatTypeToString(message->chat->type);
+        string sender = message->from->username;
+
+        printf("Chat ID: %ld\n", chatId);
+        printf("Chat Type: %s\n", chatType.c_str());
+        printf("From: @%s\n", sender.c_str());
+        printf("Message: %s\n", message->text.c_str());
+
         if (StringTools::startsWith(message->text, "/start")) {
             return;
         }
-        bot.getApi().sendMessage(message->chat->id, "Your message is: " + message->text);
+
+        string reply = "Chat ID: " + to_string(chatId) +
+                       "\nChat Type: " + chatType +
+                       "\nFrom: @" + sender +
+                       "\nMessage: " + message->text;
+
+        bot.getApi().sendMessage(chatId, reply);
     });
 
     signal(SIGINT, [](int s) {
